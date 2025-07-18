@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Notifications</title>
+</head>
+<body>
+<header>
+    <h1>Notifications</h1>
+</header>
+<main>
+    <form action="/notifications/read-many" method="post">
+        <table>
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="notification : ${notifications}">
+                    <td>
+                        <input type="checkbox" name="ids" th:value="${notification.id}" />
+                    </td>
+                    <td th:text="${notification.message}"></td>
+                    <td th:text="${notification.status}"></td>
+                    <td>
+                        <form th:action="@{'/notifications/' + ${notification.id} + '/read'}" method="post">
+                            <button type="submit">Mark as Read</button>
+                        </form>
+                        <form th:action="@{'/notifications/' + ${notification.id}}" method="post">
+                            <input type="hidden" name="_method" value="delete" />
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="submit">Mark Selected as Read</button>
+    </form>
+    <form action="/notifications/create" method="post">
+        <input type="text" name="message" placeholder="New notification message" required />
+        <button type="submit">Create Notification</button>
+    </form>
+</main>
+</body>
+</html>
