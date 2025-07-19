@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.rengreen.taskmanager.model.Task;
 import pl.rengreen.taskmanager.model.User;
+import pl.rengreen.taskmanager.repository.NotificationRepository;
 import pl.rengreen.taskmanager.repository.TaskRepository;
 
 import java.util.List;
@@ -12,10 +13,12 @@ import java.util.stream.Collectors;
 @Service
 public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
+    private final NotificationService notificationService;
 
     @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, NotificationService notificationService) {
         this.taskRepository = taskRepository;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -30,6 +33,10 @@ public class TaskServiceImpl implements TaskService {
         task.setDescription(updatedTask.getDescription());
         task.setDate(updatedTask.getDate());
         taskRepository.save(task);
+        
+     // Create notification
+        notificationService.createNotification(
+                "Task updated: "+ updatedTask.getName());
     }
 
     @Override
@@ -52,6 +59,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.getOne(id);
         task.setCompleted(true);
         taskRepository.save(task);
+        
     }
 
     @Override

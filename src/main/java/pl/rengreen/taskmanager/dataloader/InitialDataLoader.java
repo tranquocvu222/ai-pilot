@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import pl.rengreen.taskmanager.model.Role;
 import pl.rengreen.taskmanager.model.User;
 import pl.rengreen.taskmanager.model.Task;
+import pl.rengreen.taskmanager.service.NotificationService;
 import pl.rengreen.taskmanager.service.RoleService;
 import pl.rengreen.taskmanager.service.TaskService;
 import pl.rengreen.taskmanager.service.UserService;
@@ -23,6 +24,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     private UserService userService;
     private TaskService taskService;
     private RoleService roleService;
+    private NotificationService notificationService;
     private final Logger logger = LoggerFactory.getLogger(InitialDataLoader.class);
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
@@ -36,10 +38,11 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     private String defaultAdminImage;
 
     @Autowired
-    public InitialDataLoader(UserService userService, TaskService taskService, RoleService roleService) {
+    public InitialDataLoader(UserService userService, TaskService taskService, RoleService roleService, NotificationService notificationService) {
         this.userService = userService;
         this.taskService = taskService;
         this.roleService = roleService;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -311,6 +314,14 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
         taskService.findAll().stream().map(t -> "saved task: '" + t.getName()
                 + "' for owner: " + getOwnerNameOrNoOwner(t)).forEach(logger::info);
+        
+        //Notification
+        notificationService.createNotification("Noti01");
+        notificationService.createNotification("Noti02");
+        notificationService.createNotification("Noti03");
+        notificationService.createNotification("Noti04");
+        
+        
     }
 
     private String getOwnerNameOrNoOwner(Task task) {

@@ -5,7 +5,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pl.rengreen.taskmanager.enums.NotificationStatus;
 import pl.rengreen.taskmanager.model.Notification;
-;
 import pl.rengreen.taskmanager.repository.NotificationRepository;
 
 import java.time.LocalDateTime;

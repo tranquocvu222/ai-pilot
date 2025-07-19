@@ -1,15 +1,26 @@
 <!DOCTYPE html>
-<html xmlns="http://www.thymeleaf.org" lang="en">
+<html lang="eng"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!--/*/ <th:block th:include="fragments/head :: head"></th:block> /*/-->
     <title>Notifications</title>
 </head>
+
 <body>
+
 <header>
-    <h1>Notifications</h1>
+    <!--/*/ <th:block th:include="fragments/header :: header('notifications')"></th:block> /*/-->
 </header>
-<main>
-    <form action="/notifications/read-many" method="post">
-        <table>
+
+<main class="container">
+
+    <div class="card mb-3">
+
+        <h1 class="my-highest-header card-header">Notifications</h1>
+
+        <div class="card card-body">
+			<table>
             <thead>
                 <tr>
                     <th>Select</th>
@@ -37,12 +48,16 @@
                 </tr>
             </tbody>
         </table>
-        <button type="submit">Mark Selected as Read</button>
-    </form>
-    <form action="/notifications/create" method="post">
-        <input type="text" name="message" placeholder="New notification message" required />
-        <button type="submit">Create Notification</button>
-    </form>
+        </div>
+    </div>
 </main>
+
+<footer class="footer">
+    <!--/*/ <th:block th:include="fragments/footer :: footer"></th:block> /*/-->
+</footer>
+
+<!--remain scroll position after redirect-->
+<script src="js/main.js"></script>
+
 </body>
 </html>
