@@ -42,6 +42,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
+     // Create notification
+        notificationService.createNotification(
+                "Task delete: "+ id);
     }
 
     @Override
@@ -59,6 +62,8 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.getOne(id);
         task.setCompleted(true);
         taskRepository.save(task);
+        notificationService.createNotification(
+                "Task complete: "+ task.getName());
         
     }
 
@@ -67,6 +72,8 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.getOne(id);
         task.setCompleted(false);
         taskRepository.save(task);
+        notificationService.createNotification(
+                "Task Not Complete: "+ task.getName());
     }
 
     @Override
@@ -87,12 +94,16 @@ public class TaskServiceImpl implements TaskService {
     public void assignTaskToUser(Task task, User user) {
         task.setOwner(user);
         taskRepository.save(task);
+        notificationService.createNotification(
+                "Assign Task: " +task.getName()+ " To User: "+ user);
     }
 
     @Override
     public void unassignTask(Task task) {
         task.setOwner(null);
         taskRepository.save(task);
+        notificationService.createNotification(
+                "Unassign Task: " +task.getName());
     }
 
 }
