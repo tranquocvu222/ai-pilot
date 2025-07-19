@@ -62,24 +62,16 @@
 			<ul class="navbar-nav">
 				<!-- Notification Icon -->
 				<li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-					<a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button"
-						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-bell"></i>
-						<span class="badge badge-danger" th:text="${notificationCount}"
-							th:if="${notificationCount > 0}"></span>
-					</a>
-					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
-						<div th:each="notification : ${notifications}">
-							<a class="dropdown-item" th:href="@{'/notifications/' + ${notification.id}}">
-								<span th:text="${notification.message}"></span>
-								<small class="text-muted"
-									th:text="${#dates.format(notification.timestamp, 'yyyy-MM-dd HH:mm')}"></small>
-							</a>
-						</div>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item text-center" href="/notifications">View All Notifications</a>
-					</div>
-				</li>
+                    <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge badge-danger" th:text="${notificationCount}" th:if="${notificationCount > 0}"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+                        <a class="dropdown-item" href="/notifications">View All Notifications</a>
+                    </div>
+                </li>
+
 
 				<!-- Username -->
 				<li class="nav-item" sec:authorize="isAuthenticated()">
