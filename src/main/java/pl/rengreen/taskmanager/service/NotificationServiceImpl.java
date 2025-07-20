@@ -158,4 +158,14 @@ public class NotificationServiceImpl implements NotificationService {
         }
         return List.of();
     }
+    
+    @Override
+    public void createNotificationForSpecificUser(String message, User user) {
+        Notification notification = new Notification();
+        notification.setMessage(message);
+        notification.setUser(user);
+        notification.setStatus(NotificationStatus.UNREAD);
+        notification.setCreatedAt(LocalDateTime.now());
+        notificationRepository.save(notification);
+    }
 }

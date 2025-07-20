@@ -22,4 +22,7 @@ public interface NotificationService {
     List<Notification> getCurrentUserNotificationsByStatus(String status, int page, int size);
     long getCurrentUserUnreadNotificationCount();
     List<Notification> getCurrentUserRecentNotifications(int limit);
+    
+    // Method for specific user notification
+    void createNotificationForSpecificUser(String message, User user);
 }

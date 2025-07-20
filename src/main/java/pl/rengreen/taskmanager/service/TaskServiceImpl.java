@@ -6,6 +6,7 @@ import pl.rengreen.taskmanager.model.Task;
 import pl.rengreen.taskmanager.model.User;
 import pl.rengreen.taskmanager.repository.NotificationRepository;
 import pl.rengreen.taskmanager.repository.TaskRepository;
+import pl.rengreen.taskmanager.util.TaskNotificationHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,37 +15,56 @@ import java.util.stream.Collectors;
 public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
     private final NotificationService notificationService;
+    private final TaskNotificationHelper taskNotificationHelper;
 
     @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository, NotificationService notificationService) {
+    public TaskServiceImpl(TaskRepository taskRepository, NotificationService notificationService, TaskNotificationHelper taskNotificationHelper) {
         this.taskRepository = taskRepository;
         this.notificationService = notificationService;
+        this.taskNotificationHelper = taskNotificationHelper;
     }
 
     @Override
     public void createTask(Task task) {
-        taskRepository.save(task);
+        Task savedTask = taskRepository.save(task);
+        
+        // Send notification
+        taskNotificationHelper.notifyTaskCreated(savedTask);
     }
 
     @Override
     public void updateTask(Long id, Task updatedTask) {
-        Task task = taskRepository.getOne(id);
-        task.setName(updatedTask.getName());
-        task.setDescription(updatedTask.getDescription());
-        task.setDate(updatedTask.getDate());
-        taskRepository.save(task);
+        Task existingTask = taskRepository.getOne(id);
         
-     // Create notification
-        notificationService.createNotification(
-                "Task updated: "+ updatedTask.getName());
+        // Store old task data for comparison
+        Task oldTask = new Task();
+        oldTask.setId(existingTask.getId());
+        oldTask.setName(existingTask.getName());
+        oldTask.setDescription(existingTask.getDescription());
+        oldTask.setDate(existingTask.getDate());
+        oldTask.setOwner(existingTask.getOwner());
+        
+        // Update task
+        existingTask.setName(updatedTask.getName());
+        existingTask.setDescription(updatedTask.getDescription());
+        existingTask.setDate(updatedTask.getDate());
+        existingTask.setOwner(updatedTask.getOwner());
+        Task savedTask = taskRepository.save(existingTask);
+        
+        // Send notification
+        taskNotificationHelper.notifyTaskUpdated(oldTask, savedTask);
     }
 
     @Override
     public void deleteTask(Long id) {
-        taskRepository.deleteById(id);
-     // Create notification
-        notificationService.createNotification(
-                "Task delete: "+ id);
+        Task task = taskRepository.getOne(id);
+        
+        if (task != null) {
+            taskRepository.deleteById(id);
+            
+            // Send notification
+            taskNotificationHelper.notifyTaskDeleted(task);
+        }
     }
 
     @Override
@@ -92,18 +112,38 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void assignTaskToUser(Task task, User user) {
+        // Store old task data for comparison
+        Task oldTask = new Task();
+        oldTask.setId(task.getId());
+        oldTask.setName(task.getName());
+        oldTask.setDescription(task.getDescription());
+        oldTask.setDate(task.getDate());
+        oldTask.setOwner(task.getOwner());
+        
+        // Assign task
         task.setOwner(user);
-        taskRepository.save(task);
-        notificationService.createNotification(
-                "Assign Task: " +task.getName()+ " To User: "+ user);
+        Task savedTask = taskRepository.save(task);
+        
+        // Send notification using TaskNotificationHelper
+        taskNotificationHelper.notifyTaskUpdated(oldTask, savedTask);
     }
 
     @Override
     public void unassignTask(Task task) {
+        // Store old task data for comparison
+        Task oldTask = new Task();
+        oldTask.setId(task.getId());
+        oldTask.setName(task.getName());
+        oldTask.setDescription(task.getDescription());
+        oldTask.setDate(task.getDate());
+        oldTask.setOwner(task.getOwner());
+        
+        // Unassign task
         task.setOwner(null);
-        taskRepository.save(task);
-        notificationService.createNotification(
-                "Unassign Task: " +task.getName());
+        Task savedTask = taskRepository.save(task);
+        
+        // Send notification using TaskNotificationHelper
+        taskNotificationHelper.notifyTaskUpdated(oldTask, savedTask);
     }
 
 }

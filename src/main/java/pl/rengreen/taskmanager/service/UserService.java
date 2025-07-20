@@ -14,6 +14,8 @@ public interface UserService {
     List<User> findAllWithRoles();
 
     User getUserByEmail(String email);
+    
+    User getUserByName(String name);
 
     boolean isUserEmailPresent(String email);
 
