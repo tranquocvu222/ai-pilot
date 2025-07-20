@@ -1,102 +1,225 @@
-<html lang="eng"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      xmlns="http://www.thymeleaf.org">
-
-<header th:fragment="header(activeTab)">
-
+<html
+  lang="eng"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+  xmlns="http://www.thymeleaf.org"
+>
+  <header th:fragment="header(activeTab)">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-        <a class="navbar-brand mr-4" href="#">Task Manager</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
-                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+      <a class="navbar-brand mr-4" href="#">Task Manager</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarColor01"
+        aria-controls="navbarColor01"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <div class="collapse navbar-collapse" id="navbarColor01">
-            <ul class="navbar-nav mr-auto">
+      <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <!--Home-->
+          <li
+            th:class="${activeTab == 'home'}? 'active nav-item mr-4' : 'nav-item mr-4'"
+          >
+            <a class="nav-link" href="/">Home</a>
+          </li>
 
-                <!--Home-->
-                <li th:class="${activeTab == 'home'}? 'active nav-item mr-4' : 'nav-item mr-4'">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
+          <!--Tasks list-->
+          <li
+            th:class="${activeTab == 'tasks-list'}? 'active nav-item mr-4' : 'nav-item mr-4'"
+            sec:authorize="isAuthenticated()"
+          >
+            <a class="nav-link" href="/tasks">Tasks List</a>
+          </li>
 
-                <!--Tasks list-->
-                <li th:class="${activeTab == 'tasks-list'}? 'active nav-item mr-4' : 'nav-item mr-4'"
-                    sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/tasks">Tasks List</a>
-                </li>
+          <!--Assign tasks-->
+          <li
+            th:class="${activeTab == 'assign-tasks'}? 'active nav-item mr-4' : 'nav-item mr-4'"
+            sec:authorize="hasRole('ROLE_ADMIN')"
+          >
+            <a class="nav-link" href="/assignment">Assign Tasks</a>
+          </li>
 
-                <!--Assign tasks-->
-                <li th:class="${activeTab == 'assign-tasks'}? 'active nav-item mr-4' : 'nav-item mr-4'"
-                    sec:authorize="hasRole('ROLE_ADMIN')">
-                    <a class="nav-link" href="/assignment">Assign Tasks</a>
-                </li>
+          <!--Create New Task-->
+          <li
+            th:class="${activeTab == 'create-new-task'}? 'active nav-item mr-4' : 'nav-item mr-4'"
+            sec:authorize="isAuthenticated()"
+          >
+            <a class="nav-link" href="/task/create">Create New Task</a>
+          </li>
 
-                <!--Create New Task-->
-                <li th:class="${activeTab == 'create-new-task'}? 'active nav-item mr-4' : 'nav-item mr-4'"
-                    sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/task/create">Create New Task</a>
-                </li>
+          <!--Users List-->
+          <li
+            th:class="${activeTab == 'users-list'}? 'active nav-item mr-4' : 'nav-item mr-4'"
+            sec:authorize="isAuthenticated()"
+          >
+            <a class="nav-link" href="/users">Users List</a>
+          </li>
 
-                <!--Users List-->
-                <li th:class="${activeTab == 'users-list'}? 'active nav-item mr-4' : 'nav-item mr-4'"
-                    sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/users">Users List</a>
-                </li>
+          <!--Profile-->
+          <li
+            th:class="${activeTab == 'profile'}? 'active nav-item mr-4' : 'nav-item mr-4'"
+            sec:authorize="isAuthenticated()"
+          >
+            <a class="nav-link" href="/profile">Your Profile</a>
+          </li>
 
-                <!--Profile-->
-                <li th:class="${activeTab == 'profile'}? 'active nav-item mr-4' : 'nav-item mr-4'"
-                    sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/profile">Your Profile</a>
-                </li>
+          <!--About-->
+          <li
+            th:class="${activeTab == 'about'}? 'active nav-item mr-4' : 'nav-item mr-4'"
+          >
+            <a class="nav-link" href="/about">About</a>
+          </li>
 
-                <!--About-->
-                <li th:class="${activeTab == 'about'}? 'active nav-item mr-4' : 'nav-item mr-4'">
-                    <a class="nav-link" href="/about">About</a>
-                </li>
-            </ul>
+          <!--Notification-->
+          <li
+            th:class="${activeTab == 'notifications'}? 'active nav-item mr-4' : 'nav-item mr-4'"
+            sec:authorize="isAuthenticated()"
+          >
+            <a class="nav-link" href="/notifications">Notifications</a>
+          </li>
+        </ul>
 
-            <ul class="navbar-nav">
-                <!-- Notification Icon -->
-                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-                    <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-bell"></i>
-                        <span class="badge badge-danger" th:text="${notificationCount}" th:if="${notificationCount > 0}"></span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
-                        <a class="dropdown-item" href="/notifications">View All Notifications</a>
+        <ul class="navbar-nav">
+          <!-- Notification Icon -->
+          <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="notificationDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i class="fas fa-bell"></i>
+              <span
+                class="badge badge-danger"
+                th:text="${unreadNotificationCount}"
+                th:if="${unreadNotificationCount > 0}"
+              ></span>
+            </a>
+            <div
+              class="dropdown-menu dropdown-menu-right"
+              aria-labelledby="notificationDropdown"
+              style="min-width: 350px; max-height: 400px; padding: 0"
+            >
+              <!-- Fixed Header -->
+              <div
+                class="dropdown-header"
+                style="
+                  position: sticky;
+                  top: 0;
+                  background-color: #f8f9fa;
+                  z-index: 1;
+                "
+              >
+                <i class="fas fa-bell"></i> Recent Notifications
+              </div>
+
+              <!-- Scrollable Notifications List -->
+              <div style="max-height: 250px; overflow-y: auto">
+                <!-- Recent Notifications List -->
+                <div
+                  th:if="${#lists.isEmpty(recentNotifications)}"
+                  class="dropdown-item-text text-center text-muted py-3"
+                >
+                  <i class="fas fa-inbox fa-2x mb-2"></i><br />
+                  No notifications
+                </div>
+
+                <div
+                  th:each="notification : ${recentNotifications}"
+                  class="dropdown-item px-3 py-2 border-bottom"
+                >
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                      <p
+                        class="mb-1 font-weight-normal"
+                        th:text="${notification.message}"
+                        style="font-size: 0.9rem"
+                      ></p>
+                      <small class="text-muted">
+                        <i class="fas fa-clock"></i>
+                        <span
+                          th:text="${#temporals.format(notification.createdAt, 'dd/MM/yyyy HH:mm')}"
+                        ></span>
+                      </small>
                     </div>
-                </li>
+                    <span
+                      th:if="${#strings.equalsIgnoreCase(notification.status, 'unread')}"
+                      class="badge badge-primary badge-sm ml-2"
+                      >New</span
+                    >
+                  </div>
+                </div>
+              </div>
 
-                <!-- Username -->
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/profile" sec:authentication="name"></a>
-                </li>
+              <!-- Fixed Footer -->
+              <div
+                style="
+                  position: sticky;
+                  bottom: 0;
+                  background-color: #fff;
+                  border-top: 1px solid #dee2e6;
+                "
+              >
+                <a class="dropdown-item text-center py-2" href="/notifications">
+                  <i class="fas fa-eye"></i> View All Notifications
+                </a>
 
-                <!-- Register -->
-                <li th:class="${activeTab == 'register'}? 'active nav-item mr-4' : 'nav-item mr-4'"
-                    sec:authorize="!isAuthenticated()">
-                    <a class="nav-link" href="/register">Register</a>
-                </li>
+                <div
+                  th:if="${unreadNotificationCount > 0}"
+                  class="dropdown-header text-center text-info"
+                  style="background-color: #f8f9fa; margin: 0"
+                >
+                  <small
+                    th:text="'You have ' + ${unreadNotificationCount} + ' unread notifications'"
+                  ></small>
+                </div>
+              </div>
+            </div>
+          </li>
 
-                <!-- Login -->
-                <li th:class="${activeTab == 'login'}? 'active nav-item mr-4' : 'nav-item mr-4'"
-                    sec:authorize="!isAuthenticated()">
-                    <a class="nav-link" href="/login">Login</a>
-                </li>
+          <!-- Username -->
+          <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a class="nav-link" href="/profile" sec:authentication="name"></a>
+          </li>
 
-                <!-- Logout -->
-                <li>
-                    <form class="form-inline my-2 my-lg-0"
-                          th:action="@{logout}" method="post"
-                          sec:authorize="isAuthenticated()">
-                        <button class="btn btn-secondary my-2 my-sm-0 mr-4" type="submit">Log out</button>
-                    </form>
-                </li>
-            </ul>
+          <!-- Register -->
+          <li
+            th:class="${activeTab == 'register'}? 'active nav-item mr-4' : 'nav-item mr-4'"
+            sec:authorize="!isAuthenticated()"
+          >
+            <a class="nav-link" href="/register">Register</a>
+          </li>
 
-        </div>
+          <!-- Login -->
+          <li
+            th:class="${activeTab == 'login'}? 'active nav-item mr-4' : 'nav-item mr-4'"
+            sec:authorize="!isAuthenticated()"
+          >
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+
+          <!-- Logout -->
+          <li>
+            <form
+              class="form-inline my-2 my-lg-0"
+              th:action="@{logout}"
+              method="post"
+              sec:authorize="isAuthenticated()"
+            >
+              <button class="btn btn-secondary my-2 my-sm-0 mr-4" type="submit">
+                Log out
+              </button>
+            </form>
+          </li>
+        </ul>
+      </div>
     </nav>
-
-</header>
+  </header>
 </html>

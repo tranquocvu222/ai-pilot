@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.rengreen.taskmanager.model.Notification;
 import pl.rengreen.taskmanager.service.NotificationService;
 
@@ -27,12 +28,13 @@ public class NotificationController {
                                     Model model) {
         List<Notification> notifications;
         if (status.isEmpty()) {
-            notifications = notificationService.getAllNotifications(page, size); // Fetch all notifications
+            notifications = notificationService.getCurrentUserNotifications(page, size); // Fetch current user notifications
         } else {
-            notifications = notificationService.getNotifications(status, page, size); // Fetch filtered notifications
+            notifications = notificationService.getCurrentUserNotificationsByStatus(status, page, size); // Fetch filtered notifications for current user
         }
         model.addAttribute("notifications", notifications);
         model.addAttribute("status", status);
+        model.addAttribute("unreadNotificationCount", notificationService.getCurrentUserUnreadNotificationCount());
         return "views/notifications";
     }
 
@@ -49,9 +51,21 @@ public class NotificationController {
     }
 
     @PostMapping("/create")
-    public String createNotification(@RequestParam String message) {
-        notificationService.createNotification(message);
+    public String createNotification(@RequestParam String message, 
+                                   @RequestParam(defaultValue = "ALL") String targetUsers,
+                                   RedirectAttributes redirectAttributes) {
+        try {
+            notificationService.createNotificationForUsers(message, targetUsers);
+            redirectAttributes.addFlashAttribute("successMessage", "Notification created successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to create notification: " + e.getMessage());
+        }
         return "redirect:/notifications";
+    }
+
+    @GetMapping("/create")
+    public String showCreateNotificationForm() {
+        return "views/create-notification";
     }
 
     @DeleteMapping("/{id}")
