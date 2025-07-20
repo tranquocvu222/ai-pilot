@@ -10,6 +10,8 @@ public interface UserService {
     User changeRoleToAdmin(User user);
 
     List<User> findAll();
+    
+    List<User> findAllWithRoles();
 
     User getUserByEmail(String email);
 

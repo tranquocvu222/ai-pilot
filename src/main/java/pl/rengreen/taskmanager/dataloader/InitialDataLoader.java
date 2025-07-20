@@ -315,11 +315,61 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         taskService.findAll().stream().map(t -> "saved task: '" + t.getName()
                 + "' for owner: " + getOwnerNameOrNoOwner(t)).forEach(logger::info);
         
-        //Notification
-        notificationService.createNotification("Noti01");
-        notificationService.createNotification("Noti02");
-        notificationService.createNotification("Noti03");
-        notificationService.createNotification("Noti04");
+        //NOTIFICATIONS ------------------------------------------------------------------------------------------------
+        // Create notifications for all users
+        notificationService.createNotificationForUsers(
+                "Welcome to the Task Manager System! You can now manage your tasks efficiently.", 
+                "ALL"
+        );
+        
+        notificationService.createNotificationForUsers(
+                "System maintenance will be performed tonight from 2:00 AM to 4:00 AM. Please save your work.", 
+                "ALL"
+        );
+        
+        // Create notifications for regular users only
+        notificationService.createNotificationForUsers(
+                "New feature: You can now add comments to your tasks. Check it out!", 
+                "USER_ONLY"
+        );
+        
+        notificationService.createNotificationForUsers(
+                "Reminder: Please update your profile information if needed.", 
+                "USER_ONLY"
+        );
+        
+        notificationService.createNotificationForUsers(
+                "Weekly report: Your task completion rate has improved by 15% this week. Keep it up!", 
+                "USER_ONLY"
+        );
+        
+        // Create notifications for admins only
+        notificationService.createNotificationForUsers(
+                "Admin Alert: New user registrations increased by 25% this month.", 
+                "ADMIN_ONLY"
+        );
+        
+        notificationService.createNotificationForUsers(
+                "Security Update: Please review the latest security policies in the admin panel.", 
+                "ADMIN_ONLY"
+        );
+        
+        notificationService.createNotificationForUsers(
+                "System Stats: Database backup completed successfully. Next backup scheduled for tomorrow.", 
+                "ADMIN_ONLY"
+        );
+        
+        // Additional mixed notifications
+        notificationService.createNotificationForUsers(
+                "Holiday Notice: The office will be closed on Christmas Day. Plan your tasks accordingly.", 
+                "ALL"
+        );
+        
+        notificationService.createNotificationForUsers(
+                "Training: Advanced task management workshop available next Friday. Register now!", 
+                "USER_ONLY"
+        );
+        
         
         
     }

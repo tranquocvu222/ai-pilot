@@ -21,6 +21,10 @@ public class Notification {
 
     private LocalDateTime readAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Notification() {
         this.createdAt = LocalDateTime.now();
         this.status = NotificationStatus.UNREAD;
@@ -64,5 +68,13 @@ public class Notification {
 
     public void setReadAt(LocalDateTime readAt) {
         this.readAt = readAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
